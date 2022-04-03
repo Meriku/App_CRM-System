@@ -8,6 +8,7 @@ namespace CRM__EntityFramework_
 {
     public class Product
     {
+        public static decimal margin = 1.5M;
 
         public int Id { get; set; }
 
@@ -36,23 +37,18 @@ namespace CRM__EntityFramework_
         }
 
         public static void Add()
-        {
+        {           
+            var productArt = UserInterface.AskChoice("Введите артикул нового товара", 199999999);
+            var productType = UserInterface.AskChoice("Введите тип нового товара");
+            var productName = UserInterface.AskChoice("Введите название нового товара");
 
-            Console.WriteLine("Введите артикул нового товара");
-            var productArt = int.Parse(Console.ReadLine());
-            Console.WriteLine("Введите тип нового товара");
-            var productType = Console.ReadLine();
-            Console.WriteLine("Введите название нового товара");
-            var productName = Console.ReadLine();
-            Console.WriteLine("Введите себестоимость нового товара");
-            var productCost = decimal.Parse(Console.ReadLine());
-            var productPrice = decimal.Multiply(productCost, 1.5M);
-            Console.WriteLine("Введите размер упаковки нового товара");
-            var productPackage = float.Parse(Console.ReadLine());
-            Console.WriteLine("Введите единицы измерения нового товара (литры, килограммы)");
-            var productUnitOfMeasure = Console.ReadLine();
-            Console.WriteLine("Введите количество товара на складе");
-            var productBalance = int.Parse(Console.ReadLine());
+            var productCost = UserInterface.AskChoice("Введите себестоимость нового товара", 1000M);
+            var productPrice = decimal.Multiply(productCost, margin);
+
+            var productPackage = UserInterface.AskChoice("Введите размер упаковки нового товара", 100.0F);
+
+            var productUnitOfMeasure = UserInterface.AskChoice("Введите единицы измерения нового товара (литры, килограммы)");
+            var productBalance = UserInterface.AskChoice("Введите количество товара на складе", 10000);
 
 
             using (var context = new MyDbContext())
@@ -76,12 +72,29 @@ namespace CRM__EntityFramework_
             }
         }
 
+        public static void AddBalance()
+        {
+            PrintNames();
+            var productId = UserInterface.AskChoice("Введите Id товара", new Product());
+
+            var productBalance = UserInterface.AskChoice("Введите количество привезенного товара", 10000);
+
+            using (var context = new MyDbContext())
+            {
+                context.Products.Single(x => x.Id == productId).balance += productBalance;
+                context.SaveChanges();
+                Console.Clear();
+                Console.WriteLine("Товар успешно добавлен на склад!");
+            }
+        }
+
+
+
         public static void Delete()
         {
+            PrintNames();
+            var productId = UserInterface.AskChoice("Введите Id товара для удаления с базы данных", new Product());
 
-            Console.WriteLine("Введите Id товара для удаления с базы данных");
-            var productId = int.Parse(Console.ReadLine());
-        
             using (var context = new MyDbContext())
             {               
                 context.Products.Remove(context.Products.Single(item => item.Id == productId));
@@ -91,9 +104,13 @@ namespace CRM__EntityFramework_
             }
         }
 
-        public static void PrintAll()
+        public static void PrintAll(bool ClearConsole = true)
         {
-            Console.Clear();
+            if (ClearConsole)
+            {
+                Console.Clear();
+            }
+
             Console.WriteLine("\nВсе товары компании:\n");
 
             using (var context = new MyDbContext())
@@ -107,8 +124,13 @@ namespace CRM__EntityFramework_
             }
         }
 
-        public static void PrintNames()
+        public static void PrintNames(bool ClearConsole = true)
         {
+            if (ClearConsole)
+            {
+                Console.Clear();
+            }
+
             Console.WriteLine("\nВсе товары компании:\n");
 
             using (var context = new MyDbContext())

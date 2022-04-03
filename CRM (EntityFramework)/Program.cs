@@ -24,18 +24,12 @@ namespace CRM__EntityFramework_
                 Console.WriteLine("\t7 - Удалить клиента");
                 Console.WriteLine("\t8 - Удалить товар");
                 Console.WriteLine("\t9 - Удалить продажу");
+                Console.WriteLine("\t10 - Новая поставка товара");
+                Console.WriteLine("\t11 - Вывести все продажи по одному клиенту");
+                Console.WriteLine("\t12 - Вывести все продажи по одному товару");
+          
 
-
-                int result;
-
-                while (!(int.TryParse(Console.ReadLine(), out result) && result > 0 && result < 10))
-                {
-                    Console.WriteLine("Сделайте корректный выбор.");
-                }
-
-
-
-                switch (result)
+                switch (UserInterface.AskChoice("", 12))
                 {
                     case 1:
                         Console.WriteLine("Вы выбрали добавить нового клиента");
@@ -89,6 +83,24 @@ namespace CRM__EntityFramework_
                         Console.WriteLine("Вы выбрали удалить продажу");
 
                         Sell.Delete();
+
+                        break;
+                    case 10:
+                        Console.WriteLine("Новая поставка товара");
+
+                        Product.AddBalance();
+
+                        break;
+                    case 11:
+                        Console.WriteLine("Вывести все продажи по одному клиенту");
+
+                        Sell.PrintAllByClient();
+
+                        break;
+                    case 12:
+                        Console.WriteLine("Вывести все продажи по одному товару");
+
+                        Sell.PrintAllByProduct();
 
                         break;
                 }

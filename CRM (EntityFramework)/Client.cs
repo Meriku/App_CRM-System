@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 namespace CRM__EntityFramework_
 {
     public class Client
-    {
-
-        
-
+    {      
         public int Id { get; set; }
 
         public string lastName { get; set; }
@@ -34,18 +31,12 @@ namespace CRM__EntityFramework_
 
         public static void Add()
         {
-            Console.WriteLine("Введите имя нового клиента");
-            var clientfirstName = Console.ReadLine();
-            Console.WriteLine("Введите фамилию нового клиента");
-            var clientlastName = Console.ReadLine();
-            Console.WriteLine("Введите отчество нового клиента");
-            var clientpatronymicName = Console.ReadLine();
-            Console.WriteLine("Введите дату рождения нового клиента - формат 00.00.0000 - (необязательное поле)");
-            var clientbirthDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Введите номер телефона нового клиента");
-            var clientphoneNumber = Console.ReadLine();
-            Console.WriteLine("Введите email нового клиента");
-            var clientemail = Console.ReadLine();
+            var clientfirstName = UserInterface.AskChoice("Введите имя нового клиента");
+            var clientlastName = UserInterface.AskChoice("Введите фамилию нового клиента");
+            var clientpatronymicName = UserInterface.AskChoice("Введите отчество нового клиента");
+            var clientbirthDate = UserInterface.AskChoice("Введите дату рождения нового клиента - формат 00.00.0000 - (необязательное поле)", isrequired: false);
+            var clientphoneNumber = UserInterface.AskChoice("Введите номер телефона нового клиента");
+            var clientemail = UserInterface.AskChoice("Введите email нового клиента");
 
             using (var context = new MyDbContext())
             {
@@ -67,9 +58,8 @@ namespace CRM__EntityFramework_
         }
         public static void Delete()
         {
-
-            Console.WriteLine("Введите Id клиента для удаления с базы данных");
-            var clientId = int.Parse(Console.ReadLine());
+            PrintNames();
+            var clientId = UserInterface.AskChoice("Введите Id клиента для удаления с базы данных", new Client());
 
             using (var context = new MyDbContext())
             {
@@ -80,9 +70,13 @@ namespace CRM__EntityFramework_
             }
         }
 
-        public static void PrintAll()
+        public static void PrintAll(bool ClearConsole = true)
         {
-            Console.Clear();
+            if (ClearConsole)
+            {
+                Console.Clear();
+            }
+
             Console.WriteLine("\nВсе клиенты компании:\n");
 
             using (var context = new MyDbContext())
@@ -96,8 +90,13 @@ namespace CRM__EntityFramework_
             }
         }
 
-        public static void PrintNames()
+        public static void PrintNames(bool ClearConsole = true)
         {
+            if (ClearConsole)
+            {
+                Console.Clear();
+            }
+
             Console.WriteLine("\nВсе клиенты компании:\n");
 
             using (var context = new MyDbContext())
